@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -37,7 +38,7 @@ func newAddCommand() *cobra.Command {
 					}
 					pubKeyServer = input
 				} else {
-					return fmt.Errorf("public key must be provided either via --pub_key flag or piped input")
+					return errors.New("public key must be provided either via --pub_key flag or piped input")
 				}
 			}
 
@@ -45,19 +46,17 @@ func newAddCommand() *cobra.Command {
 			pubKeyServer = strings.TrimSpace(pubKeyServer)
 
 			if len(args) != 1 {
-				cmd.Println("give name client")
-				return nil
+				return errors.New("give name client")
 			}
 
 			name := args[0]
 
 			if clientIP == "" {
-				return fmt.Errorf("IP client must be provided via --client_ip")
+				return errors.New("IP client must be provided via --client_ip")
 			}
 
 			privateClientKey, publicClientKey, err := GenerateWireGuardKeyPair()
 			if err != nil {
-				fmt.Println("Error:", err)
 				return err
 			}
 
@@ -80,8 +79,8 @@ func newAddCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&pubKeyServer, "pub_key", "", "Public key of server")
-	cmd.Flags().StringVar(&clientIP, "client_ip", "", "IP address of client")
+	cmd.Flags().StringVarP(&pubKeyServer, "pub_key", "p", "", "Public key of server")
+	cmd.Flags().StringVarP(&clientIP, "client_ip", "i", "", "IP address of client")
 
 	return cmd
 }

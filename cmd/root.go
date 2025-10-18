@@ -4,11 +4,8 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
-	client_cmd "github.com/viktor-titov/wireguard-helper/command/client"
+	client_cmd "github.com/viktor-titov/wireguard-helper/internal/command/client"
 )
 
 var rootCmd = &cobra.Command{
@@ -16,11 +13,7 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error:", err)
-		os.Exit(1)
-	}
+	rootCmd.Execute()
 }
 
 func init() {

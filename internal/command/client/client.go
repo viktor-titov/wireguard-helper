@@ -9,6 +9,7 @@ func NewCommand() *cobra.Command {
 	}
 
 	cmd.AddCommand(newAddCommand())
+	cmd.AddCommand(newSendMailCommand())
 
 	return cmd
 }
