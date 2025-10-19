@@ -2,21 +2,20 @@ package mail
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/wneessen/go-mail"
 )
 
-const (
-	sender = "kkeeptorch@gmail.com"
-	pass   = "dzjx jzlr hdlf mijo"
-)
+var sender string
+var password string
 
 func newSMTPClient() (*mail.Client, error) {
 	client, err := mail.NewClient(
 		"smtp.gmail.com",
 		mail.WithSMTPAuth(mail.SMTPAuthPlain),
-		mail.WithUsername(sender),
-		mail.WithPassword(pass),
+		mail.WithUsername(getSender()),
+		mail.WithPassword(getPassword()),
 		mail.WithTLSPolicy(mail.TLSMandatory),
 	)
 	if err != nil {
@@ -24,4 +23,30 @@ func newSMTPClient() (*mail.Client, error) {
 	}
 
 	return client, nil
+}
+
+func getSender() string {
+	if sender == "" {
+		value := os.Getenv("EMAIL_SENDER")
+		if value == "" {
+			panic("email sender empty")
+		}
+
+		return value
+	}
+
+	return sender
+}
+
+func getPassword() string {
+	if password == "" {
+		v := os.Getenv("EMAIL_PASSWORD")
+		if v == "" {
+			panic("email password empty")
+		}
+
+		return v
+	}
+
+	return password
 }

@@ -9,7 +9,7 @@ import (
 func Send(recipient, subject string, attach []string) (string, error) {
 	message := mail.NewMsg()
 
-	err := message.From(sender)
+	err := message.From(getSender())
 	if err != nil {
 		return "", fmt.Errorf("setting up sender %w", err)
 	}
